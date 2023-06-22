@@ -4,6 +4,8 @@ const itemList = document.getElementById('item-list');
 const clearBtn = document.getElementById('clear');
 const itemFilter = document.getElementById('filter');
 const items = itemList.querySelectorAll('li');
+const formBtn = itemForm.querySelector('button');
+let isEditMode = false;
 
 function displayItems() {
     const items = getItemsFromStorage();
@@ -90,7 +92,24 @@ function getItemsFromStorage() {
 function onClickItem(e) {
     if(e.target.parentElement.classList.contains('remove-item')) {
         removeItem(e.target.parentElement.parentElement);
+    } else {
+        setItemToEdit(e.target);
     }
+}
+
+function setItemToEdit(item) {
+    isEditMode = true;
+    
+    // if we select another value then gray color will turn to black
+    itemList.querySelectorAll('li').forEach(item => item.style.color = "#333");
+
+    //black text color will turn to gray after selection of text
+    item.style.color = '#ccc';
+
+    formBtn.innerHTML = '<i class="fa-solid fa-pen"></i> Update Item';
+    formBtn.style.backgroundColor = "#228B22";
+
+    itemInput.value = item.textContent;
 }
 
 
