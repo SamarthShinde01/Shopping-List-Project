@@ -25,6 +25,23 @@ function onAddItemSubmit(e) {
         return;
     }
 
+    //check for edit mode
+    if(isEditMode) {
+        const itemToEdit = itemList.querySelector('.edit-mode');
+        removeItemFromStorage(itemToEdit);
+        itemToEdit.classList.remove('edit-mode');
+        itemToEdit.remove();
+        isEditMode = false;
+    } else {
+        // if item exists then we dont add item 
+        if(checkIfItemExists(newItem)){
+        alert('That item is already exists!');
+        return;
+        }
+        
+    }
+
+
     //create item to DOM 
     addItemToDOM(newItem);
 
@@ -97,14 +114,25 @@ function onClickItem(e) {
     }
 }
 
+function checkIfItemExists(item) {
+    const itemsFromStorage = getItemsFromStorage();
+
+    if(itemsFromStorage.includes(item)){
+        return true;
+    } else {
+        return false;
+    }
+}
+
 function setItemToEdit(item) {
     isEditMode = true;
     
     // if we select another value then gray color will turn to black
-    itemList.querySelectorAll('li').forEach(item => item.style.color = "#333");
+    itemList.querySelectorAll('li').forEach(item => item.classList.remove('edit-mode'));
 
     //black text color will turn to gray after selection of text
-    item.style.color = '#ccc';
+    // item.style.color = '#ccc';
+    item.classList.add('edit-mode');
 
     formBtn.innerHTML = '<i class="fa-solid fa-pen"></i> Update Item';
     formBtn.style.backgroundColor = "#228B22";
@@ -169,6 +197,8 @@ function filterItems(e) {
 
 
 function checkUI() {
+    itemInput.value = '';
+
     const items = itemList.querySelectorAll('li');
 
     if(items.length === 0) {
@@ -178,6 +208,11 @@ function checkUI() {
         itemFilter.style.display = 'block';
         clearBtn.style.display = 'block';
     }
+
+    formBtn.innerHTML = '<i class="fa-solid fa-plus"></i> Add Item';
+    formBtn.style.backgroundColor = '#333';
+
+    isEditMode = false;
 }
 
 // Event Listeners
